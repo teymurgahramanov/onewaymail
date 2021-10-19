@@ -1,5 +1,5 @@
 # OneWayMail
-Postfix server configured only for sending mails. Suitable for 'no-reply' accounts.
+Postfix server configured only to send mails. Suitable for 'no-reply' type accounts.
 
 ## Features
 - Easy usage
