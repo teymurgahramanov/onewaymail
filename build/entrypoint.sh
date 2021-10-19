@@ -1,6 +1,7 @@
 #Postfix
 postconf -e myhostname=$MAIL_HOST
-postconf -e mydestination=localhost,localhost.localdomain,localhost
+postconf -e mydestination=$MAIL_DOMAIN,$MAIL_HOST,localhost,localhost.localdomain
+postconf -e myorigin=$MAIL_DOMAIN
 postconf -e maillog_file=/dev/stdout
 postconf -e inet_protocols=ipv4
 postconf -e smtpd_sasl_auth_enable=yes
