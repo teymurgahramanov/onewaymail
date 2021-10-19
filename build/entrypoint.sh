@@ -27,7 +27,10 @@ cat >> /etc/postfix/smtp_header_checks << EOF
 /^Mime-Version:/        IGNORE
 EOF
 echo 'null: /dev/null' > /etc/aliases
-echo "no-reply@$MAIL_DOMAIN null" > /etc/postfix/virtual
+echo $SMTP_USER | tr , \\n > /tmp/users
+while IFS=':' read -r _user _pass; do
+  echo "$_user@$MAIL_DOMAIN null" > /etc/postfix/virtual
+done < /tmp/users
 newaliases
 postmap /etc/postfix/virtual
 postconf -F '*/*/chroot = n'
@@ -59,12 +62,12 @@ pwcheck_method: auxprop
 auxprop_plugin: sasldb
 mech_list: PLAIN LOGIN CRAM-MD5 DIGEST-MD5 NTLM
 EOF
-echo $SMTP_USER | tr , \\n > /tmp/passwd
+echo $SMTP_USER | tr , \\n > /tmp/users
 while IFS=':' read -r _user _pass; do
   echo $_pass | saslpasswd2 -p -c -u $MAIL_DOMAIN $_user
-done < /tmp/passwd
+done < /tmp/users
 chown postfix:sasl /etc/sasldb2
 
 ###
-rm -f /tmp/passwd
+rm -f /tmp/users
 postfix start-fg
