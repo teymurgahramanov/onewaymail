@@ -2,11 +2,14 @@
 postconf -e myhostname=$MAIL_HOST
 postconf -e mydestination=$MAIL_DOMAIN,$MAIL_HOST,localhost,localhost.localdomain
 postconf -e myorigin=$MAIL_DOMAIN
+postconf -e mynetworks=$ALLOWED_NETWORKS
 postconf -e maillog_file=/dev/stdout
 postconf -e inet_protocols=ipv4
 postconf -e smtpd_sasl_auth_enable=yes
 postconf -e broken_sasl_auth_clients=yes
-postconf -e smtpd_recipient_restrictions=permit_sasl_authenticated,reject_unauth_destination
+postconf -e smtpd_client_restrictions=permit_mynetworks,reject
+postconf -e smtpd_relay_restrictions=permit_mynetworks,permit_sasl_authenticated,reject
+postconf -e smtpd_recipient_restrictions=permit_mynetworks,permit_sasl_authenticated,reject_unauth_destination,reject
 postconf -e strict_rfc821_envelopes=yes
 postconf -e show_user_unknown_table_name=no
 postconf -e smtpd_helo_required=yes
